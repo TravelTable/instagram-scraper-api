@@ -127,10 +127,10 @@ def get_random_proxy():
 async def create_client():
     proxy = get_random_proxy()
     client = httpx.AsyncClient(
-        headers=HEADERS,
-        timeout=httpx.Timeout(20.0),
-        proxies=proxy
-    )
+    headers=HEADERS,
+    timeout=httpx.Timeout(20.0),
+    proxy=proxy     # ✅ correct
+)
     return client
 
 async def fetch_with_retries(method: str, url: str, **kwargs):
@@ -233,7 +233,7 @@ async def get_video_file_size(url: str) -> float:
     async with httpx.AsyncClient(
         headers=HEADERS,
         timeout=httpx.Timeout(20.0),
-        proxies=proxy
+        proxy=proxy  # <-- Corrected here
     ) as client:
         response = await client.head(url)
         size_bytes = int(response.headers.get("content-length", 0))
