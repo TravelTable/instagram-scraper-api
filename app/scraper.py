@@ -14,29 +14,29 @@ from app.config import HEADERS, INSTAGRAM_PROFILE_URL, INSTAGRAM_GRAPHQL_URL, PO
 
 # --- PROXIES ---
 proxies = [
-    "http://212.60.14.146:6943",
-    "http://156.237.48.221:7122",
-    "http://156.237.26.78:5976",
-    "http://62.164.228.15:8327",
-    "http://72.1.179.38:6432"
+    "http://ihqqebfi:m65ebvc3vi3w@212.60.14.146:6943",
+    "http://ihqqebfi:m65ebvc3vi3w@156.237.48.221:7122",
+    "http://ihqqebfi:m65ebvc3vi3w@156.237.26.78:5976",
+    "http://ihqqebfi:m65ebvc3vi3w@62.164.228.15:8327",
+    "http://ihqqebfi:m65ebvc3vi3w@72.1.179.38:6432"
 ]
 
-proxy_auth = ("ihqqebfi", "m65ebvc3vi3w")  # Authentication
+
 
 # Pick a random proxy
 def get_random_proxy():
     return random.choice(proxies)
 
-# --- CLIENT CREATION ---
+
 async def create_client():
     proxy_url = get_random_proxy()
     client = httpx.AsyncClient(
         headers=HEADERS,
         timeout=httpx.Timeout(20.0),
-        proxy=proxy_url,
-        proxy_auth=proxy_auth   # <-- IMPORTANT
+        proxy=proxy_url  # ✅ ONLY proxy
     )
     return client
+
 
 # --- FETCH WITH RETRIES ---
 async def fetch_with_retries(method: str, url: str, **kwargs):
@@ -140,13 +140,13 @@ async def get_video_file_size(url: str) -> float:
     async with httpx.AsyncClient(
         headers=HEADERS,
         timeout=httpx.Timeout(20.0),
-        proxy=proxy_url,
-        proxy_auth=proxy_auth
+        proxy=proxy_url  # ✅ ONLY proxy
     ) as client:
         response = await client.head(url)
         size_bytes = int(response.headers.get("content-length", 0))
         size_mb = size_bytes / (1024 * 1024)
         return round(size_mb, 2)
+
 
 # --- LANGUAGE DETECTION ---
 def safe_detect_language(text: str) -> str:
